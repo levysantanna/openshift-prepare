@@ -1,0 +1,10 @@
+- name: Enabling Repos
+  shell: "subscription-manager attach --auto  ;subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-extras-rpms --disable=rhel-7-server-ose-3.9-rpms --enable=rhel-7-server-ose-3.11-rpms"
+  ignore_errors: true
+
+- name: Installing Packages
+  package:
+    name: "{{ packgs }}"
+    state: latest
+  tags: install
+

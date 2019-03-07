@@ -1,0 +1,8 @@
+- name: Getting disk sizes
+  shell: "fdisk -l |grep Disk |grep bytes"
+  register: disks
+
+- debug:
+    msg: "{{ ansible_hostname }} => {{ item }} "
+  with_items: "{{ disks.stdout_lines }}"
+

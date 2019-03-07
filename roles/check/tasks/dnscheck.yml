@@ -1,0 +1,37 @@
+#- name: Installing bind-utils
+#  package:
+#    name: bind-utils
+#    state: latest
+
+- name: Getting FQDN from OS
+  shell: "hostname -f"
+  register: fqdn
+  
+- name: Getting simple hostname from OS
+  shell: "hostname"
+  register: hostnm
+
+- debug: 
+    msg: "Checking if OS {{ hostnm.stdout }} is equal OS FQDN {{ fqdn.stdout }}, and if both are equal Inventory {{ ansible_hostname }} hostname" 
+
+- debug:
+    msg: "YES! {{ hostnm.stdout }}, {{ fqdn.stdout }}, {{ ansible_hostname }} and {{ item }} are equal!!" 
+  when: hostnm.stdout == fqdn.stdout and fqdn.stdout ==  item 
+  with_items: "{{ groups['all'] }}"
+
+- name: Pinging the other servers
+  shell: "ping -c1 {{ item }}"
+  with_items: "{{ groups['all'] }}"
+  ignore_errors: true
+
+- name: Checking reverses for default IPv4 address
+  shell: "dig -x {{ ansible_default_ipv4.address }} +short | head -c -2"
+  register: reverse
+
+- debug: 
+    msg: "Checking if OS {{ fqdn.stdout }} and DNS reverse {{ reverse.stdout }} are equal" 
+
+- debug:
+    msg: "YES! OS FQDN {{ fqdn.stdout }} and DNS reverse {{ reverse.stdout }} are equal!!" 
+  when: reverse.stdout == fqdn.stdout 
+

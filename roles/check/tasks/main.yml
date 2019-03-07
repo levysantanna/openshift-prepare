@@ -1,0 +1,6 @@
+---
+# tasks file for prereq
+
+- include_tasks: disks.yml
+- include_tasks: packages.yml
+- include_tasks: dnscheck.yml

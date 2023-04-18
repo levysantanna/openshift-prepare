@@ -1,7 +1,7 @@
 # openshift-prepare
 Ansible role and playbooks to prepare a new OpenShift version 3 installation
 
-You can only sue main.yml 
+You can only use main.yml 
 
 Main will include:
 - include_tasks: disks.yml
